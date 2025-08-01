@@ -1,32 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Add a class to the body once the page is loaded
-    document.body.classList.add('loaded');
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
 
-    // Add event listeners to the category titles for filtering
-    const categoryTitles = document.querySelectorAll('h2');
-    categoryTitles.forEach(title => {
-        title.addEventListener('click', () => {
-            const category = title.parentElement;
-            category.classList.toggle('collapsed');
-        });
-    });
+    // Show the first tab and panel by default
+    if (tabs.length > 0) {
+        tabs[0].classList.add('active');
+        panels[0].classList.add('active');
+    }
 
-    // Add a subtle animation to the cards on mouseover
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Deactivate all tabs and panels
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
 
-            const rotateX = (y / rect.height - 0.5) * -20;
-            const rotateY = (x / rect.width - 0.5) * 20;
-
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            // Activate the clicked tab and its corresponding panel
+            tab.classList.add('active');
+            const panelId = tab.getAttribute('aria-controls');
+            const panel = document.getElementById(panelId);
+            if (panel) {
+                panel.classList.add('active');
+            }
         });
     });
 });

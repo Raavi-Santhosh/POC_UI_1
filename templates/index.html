@@ -7,24 +7,35 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="text-white">
+<body class="text-gray-800">
 
     <div class="container mx-auto p-8">
         <h1 class="text-5xl font-bold text-center mb-16 tracking-wider">Project Showcase</h1>
 
+        <div class="flex justify-center mb-12">
+            <div class="flex space-x-4" role="tablist">
+                {% for category in categories %}
+                    {% if category.enabled %}
+                        <button class="tab-btn" role="tab" aria-controls="{{ category.name|lower|replace(' ', '-') }}-panel" id="{{ category.name|lower|replace(' ', '-') }}-tab">
+                            {{ category.name }}
+                        </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
         {% for category in categories %}
             {% if category.enabled %}
-                <div class="mb-16">
-                    <h2 class="text-4xl font-bold mb-8 border-l-4 border-blue-500 pl-4">{{ category.name }}</h2>
+                <div class="tab-panel" role="tabpanel" id="{{ category.name|lower|replace(' ', '-') }}-panel" aria-labelledby="{{ category.name|lower|replace(' ', '-') }}-tab">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                         {% for project in category.projects %}
                             {% if project.enabled %}
                                 <div class="card">
                                     <h3 class="text-2xl font-bold mb-4">{{ project.name }}</h3>
-                                    <p class="text-gray-300 mb-6 h-24 overflow-y-auto">{{ project.description }}</p>
+                                    <p class="text-gray-600 mb-6 h-24 overflow-y-auto">{{ project.description }}</p>
                                     <div class="flex flex-wrap gap-4">
                                         {% for button in project.buttons %}
                                             {% if button.enabled %}
